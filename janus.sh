@@ -6,7 +6,6 @@ print() {
   printf "\n$fmt\n" "$@"
 }
 
-
 # Check if command line tools are installed.
 # https://stackoverflow.com/questions/15371925/how-to-check-if-command-line-tools-is-installed
 check_command_line_tools() {
@@ -33,13 +32,12 @@ create_zshrc() {
 }
 
 check_shell() {
-  local get_shell=echo $(echo $SHELL | cut -d/ -f3 );
-  if [[ $get_shell == "zsh" ]]; then 
-    create_zshrc
-  else
-    create_zshrc
-    chsh -s "$(which zsh)"
-  fi
+  case "$SHELL" in
+    */zsh) create_zshrc ;;
+    *)  create_zshrc
+        print "here"
+        chsh -s "$(which zsh)";;
+  esac
 }
 
 append_to_zshrc() {
@@ -68,10 +66,60 @@ install_homebrew_if_not_exists() {
   fi
 }
 
-if brew list | grep -Fq brew-cask; then
-  inform "Uninstalling old Homebrew-Cask ..."
-  brew uninstall --force brew-cask
-fi
+uninstall_brew_cask() {
+  if brew list | grep -Fq brew-cask; then
+    print "Uninstalling old Homebrew-Cask ..."
+    brew uninstall --force brew-cask
+  fi
+}
+
+update_brew() {
+  print "Updating Homebrew ..."
+  brew update
+  brew upgrade
+  brew doctor
+}
+
+install_brew_formulae() {
+  # Unix
+  brew "git"
+  brew "openssl"
+  brew "vim"
+  brew "zsh"
+
+  # Programming languages
+  brew "node"
+  brew "go"
+  cask "java"
+
+  # Databases
+  brew "postgres", restart_service: true
+  brew "redis", restart_service: true
+  brew "mysql"
+  # brew "mongodb"
+
+  # Applications
+  cask "vlc"                 unless Dir.exists?('/Applications/VLC.app')
+  cask "atom"                unless Dir.exists?('/Applications/atom.app')
+  cask "sublime-text"        unless Dir.exists?('/Applications/Sublime Text.app')
+  cask "visual-studio-code"  unless Dir.exists?('/Applications/Visual Studio Code.app')
+  cask "android-studio"      unless Dir.exists?('/Applications/Android Studio.app')
+  cask "iterm2"              unless Dir.exists?('/Applications/iTerm.app')
+  cask "google-chrome"       unless Dir.exists?('/Applications/Google Chrome.app')
+  cask "firefox"             unless Dir.exists?('/Applications/Firefox.app')
+  cask "slack"               unless Dir.exists?('/Applications/Slack.app')
+  cask "github-desktop"      unless Dir.exists?('/Applications/Github Desktop.app')
+  cask "postico"             unless Dir.exists?('/Applications/Postico.app')
+  cask "mysqlworkbench"      unless Dir.exists?('/Applications/MySqlWorkbench.app')
+  cask "notion"              unless Dir.exists?('/Applications/Notion.app')
+  cask "evernote"            unless Dir.exists?('/Applications/Evernote.app')
+  cask "spotify"             unless Dir.exists?('/Applications/Spotify.app')
+  cask "rescuetime"          unless Dir.exists?('/Applications/RescueTime.app')
+  cask "dash"                unless Dir.exists?('/Applications/Dash.app')
+  # cask "1password"           unless Dir.exists?('/Applications/1Password.app')
+  # cask "dropbox"             unless Dir.exists?('/Applications/Dropbox.app')
+  # cask "google-drive"        unless Dir.exists?('/Applications/Google Drive.app')
+}
 
 print "Janus is brewing..."
 
@@ -85,9 +133,9 @@ append_to_zshrc 'export PATH="$HOME/.bin:$PATH"'
 
 install_homebrew_if_not_exists
 
-ssh_key_setup
+uninstall_brew_cask
 
-inform "All set! Miss me - Janus!!"
+# update_brew
+brew bundle --file=- <<EOF
 
-
-
+print "All set! Miss me - Janus!!"
