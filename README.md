@@ -4,7 +4,9 @@
   <img alt="janus" title="Janus" src="https://raw.githubusercontent.com/mkfeuhrer/janus/master/images/janus.png" width="550"> </img>
 </p>
 
-One stop solution for your mac. Setup all your dev requirements in one go
+One stop solution for your mac. Setup all your dev requirements in one go.
+
+This is inspired from [thoughtbot/laptop](https://github.com/thoughtbot/laptop). I have customized it to my use with some additional stuff.
 
 ## Installation
 
@@ -66,3 +68,8 @@ You can always edit this locally as per your requirements.
 - openssl
 - vim
 - zsh
+
+# Contribute
+
+Feel free to fork and improve it. Do report if you find any issues.
+
