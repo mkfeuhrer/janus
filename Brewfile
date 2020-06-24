@@ -5,6 +5,7 @@ brew "git"
 brew "openssl"
 brew "vim"
 brew "zsh"
+brew "tree"
 
 # Programming languages
 brew "node"
